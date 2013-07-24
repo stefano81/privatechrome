@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 	    chrome.tabs.sendMessage(tabs[0].id, {
-		encrypt: true,
+		encrypt: false,
 		password : passwd
 	    }, function(response) {
 		document.getElementById("ciphertext").value = response;

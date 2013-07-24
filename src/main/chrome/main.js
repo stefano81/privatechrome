@@ -12,26 +12,42 @@ function encrypt(schema, plaintext, password) {
 
     return enc.toString();
 }
-/*
+
 function decrypt(schema, ciphertext, password) {
-    var metas = document.getElementsByTagName("meta");
-    for (var i = 0; i < metas.length; ++i) {
-	if ("prichrome" == metas[i].getAttribute("name")) {
-	    var content = metas[i].getAttribute("content");
-	    var body = document.getElementById("");
-	}
-    };
+    switch (schema) {
+	case "aes":
+	var dec = CryptoJS.AES.decrypt(ciphertext, password);
+	break;
+	case "tripledes":
+	var dec = CryptoJS.TripleDES.decrypt(ciphertext, password);
+	default:
+	var dec = plaintext;
+	break;
+    }
+
+    return dec.toString(CryptoJS.enc.Utf8);
 }
-*/
 
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
-    console.log(message);
     if (message.encrypt) {
 	var ct = encrypt(message.schema, document.getElementsByTagName("html")[0].outerHTML, message.password);
-	var v = "<!doctype html><html><head><meta name=\"prichrome\" content=\"" + message.schema + "\" />" +   "</head><body>" + ct + "</body></html>";
-	sendResponse(v);
+	var response = "<!doctype html><html><head><meta name=\"prichrome\" content=\"" + message.schema + "\" />" +   "</head><body>" + ct + "</body></html>";
     } else {
-	console.log(document.getElementsByTagName("html")[0].textContent);
+	var oHtml = document.getElementsByTagName("html")[0];
+	var metas = document.getElementsByTagName("meta");
+	for (var i = 0; i < metas.length; ++i) {
+	    if ("prichrome" == metas[i].getAttribute("name")) {
+		var schema = metas[i].getAttribute("content");
+	    }
+	};
+
+	var plain = decrypt(schema, oHtml.textContent.trim(), message.password);
+
+	oHtml.innerHTML = plain;
+	
+	var response = "Done!";
     }
+
+    sendResponse(response);
 });
 
