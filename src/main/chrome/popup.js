@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', function () {
     document.querySelector('#encrypt').addEventListener('click', function(event) {
 	var oSchema = document.getElementById("schema");
@@ -9,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 	    chrome.tabs.sendMessage(tabs[0].id, {
+		encrypt: true,
 		schema : oSchema.options[oSchema.selectedIndex].value,
 		password : passwd
 	    }, function(response) {

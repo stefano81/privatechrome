@@ -16,9 +16,9 @@
 	    "file://*/*"
 	    ],
 	    "js" : [
-		/*"aes.js",
+		"aes.js",
 		"tripledes.js",
-		"sha512.js",*/
+		"sha512.js",
 		"main.js"
 	    ],
 	    "run_at" : "document_idle",
