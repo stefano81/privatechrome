@@ -1,5 +1,9 @@
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
-    sendResponse(encdocument.getElementsByTagName("body")[0].outerHTML);
+    console.log("this is a log");
+    console.log(message);
+
+    sendResponse("this is my response");
+    //sendResponse(document.getElementsByTagName("body")[0].outerHTML);
 });
 
 var metas = document.getElementsByTagName("meta");
