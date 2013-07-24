@@ -23,6 +23,7 @@ function decrypt(schema, ciphertext, password) {
     };
 }
 */
+
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
     console.log(message);
     if (message.encrypt) {
@@ -30,7 +31,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 	var v = "<!doctype html><html><head><meta name=\"prichrome\" content=\"" + message.schema + "\" />" +   "</head><body>" + ct + "</body></html>";
 	sendResponse(v);
     } else {
-	//
+	console.log(document.getElementsByTagName("html")[0].textContent);
     }
 });
 
