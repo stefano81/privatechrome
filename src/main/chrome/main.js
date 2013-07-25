@@ -28,12 +28,29 @@ function decrypt(schema, ciphertext, password) {
     return dec.toString(CryptoJS.enc.Utf8);
 }
 
+function resetDOM(doc) {
+    for (i = 0; i < doc.attributes.length; ++i) {
+
+    }
+    for (i = 0; i < doc.attribtues.length;
+}
+
+function restoreDecyptedDOM(doc, dec) {
+    for (i = 0; i < dec.attributes.length; ++i) {
+	var attr = element.attributes[i];
+	doc.setAttribute(attr.name, attr.value);
+    }
+    for (i = 0; i < dec.childNodes.length; ++i) {
+	    doc.appendChild(element.childNodes[i]);
+    }
+}
+
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
     if (message.encrypt) {
-	var ct = encrypt(message.schema, document.getElementsByTagName("html")[0].outerHTML, message.password);
+	var ct = encrypt(message.schema, document.documentElement.outerHTML, message.password);
 	var response = "<!doctype html><html><head><meta name=\"prichrome\" content=\"" + message.schema + "\" />" +   "</head><body>" + ct + "</body></html>";
     } else {
-	var oHtml = document.getElementsByTagName("html")[0];
+	var oHtml = document.documentElement;
 	var metas = document.getElementsByTagName("meta");
 	for (var i = 0; i < metas.length; ++i) {
 	    if ("prichrome" == metas[i].getAttribute("name")) {
@@ -43,9 +60,36 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 
 	var plain = decrypt(schema, oHtml.textContent.trim(), message.password);
 
-	oHtml.innerHTML = plain;
+	var element = document.createElement('html');
+	element.innerHTML = plain;
+
+	resetDOM(document.documentElement);
+
+	restoreDecryptedDOM(document.documentElement, element);
 	
-	var response = "Done!";
+	//oHtml.innerHTML = plain;
+
+	//var script = document.createElement('script');
+	/*script.textContent = [ "function(){",
+			       "alert('something');",
+			       "var myevent = new Event('DOMContentLoaded', {bubble : true, cancelable: true});",
+			       "document.documentElement.dispatchEvent(myevent);",
+			       "}();"
+	].join('\n');*/
+	/*script.textContent = [
+	    //"document.documentElement.dispatchEvent(new Event('DOMContentLoaded', {bubbles : true, cancelable : true}));",
+	    "document.addEventListener('load', function() {",
+	    "alert('loaded')",
+	    "});",
+	    "var evt = new Event('load', {bubbles : true, cabcelable : true});",
+	    //"var evt = new Event('DOMContentLoaded', {bubbles : true, cabcelable : true});",
+	    "document.dispatchEvent(evt);"
+	].join('\n');
+	var doc = (document.head || document.documentElement);
+	doc.insertBefore(script, doc.childNodes[0]);
+	script.parentNode.removeChild(script);*/
+
+	var response = element.outerHTML;
     }
 
     sendResponse(response);
