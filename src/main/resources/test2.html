@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Encrypt the page</title>
+    <script type="text/javascript">
+      alert("this is the script in the header");
+      function abc() {
+        alert("this is on load");
+      };
+    </script>
+  </head>
+  <body onload="abc()">
+    <table>
+      <tr><td>Schema:<select id="schema">
+	    <option value="aes">AES</option>
+	    <option value="tripledes">3DES</option>
+      </select></td><td>Password:<input id="pwd" type="text" /></td><td><button id="encrypt">Encrypt!</button></td></tr>
+      <tr><td>&nbsp;</td><td></td><td><button id="decrypt">Decrypt</button></td></tr>
+      <tr><td colspan="2"><textarea rows="30" cols="80" id="ciphertext"></textarea></td>
+  </body>
+</html>
+
