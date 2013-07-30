@@ -90,7 +90,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 	doc.insertBefore(script, doc.childNodes[0]);
 	script.parentNode.removeChild(script);
 
-	var response = "ok"element.outerHTML;
+	var response = "Decrypted!";//element.outerHTML;
     }
 
     sendResponse(response);
