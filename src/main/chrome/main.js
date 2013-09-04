@@ -29,11 +29,8 @@ function decrypt(schema, ciphertext, password) {
 }
 
 function resetDOM(doc) {
-    var i = 0;
-    while (0 != doc.childNodes.length) {
-	console.log((i++) + " removing " + doc.childNodes[0].outerHTML);
+    while (0 != doc.childNodes.length) 
 	doc.removeChild(doc.childNodes[0]);
-    }
 }
 
 function restoreDecryptedDOM(doc, dec) {
@@ -61,36 +58,21 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 
 	var plain = decrypt(schema, oHtml.textContent.trim(), message.password);
 
-	/*var element = document.createElement('html');
-	element.innerHTML = plain;
-
-	resetDOM(document.documentElement);
-
-	restoreDecryptedDOM(document.documentElement, element);*/
-	
 	oHtml.innerHTML = plain;
 
 	var script = document.createElement('script');
-	/*script.textContent = [ "function(){",
-			       "alert('something');",
-			       "var myevent = new Event('DOMContentLoaded', {bubble : true, cancelable: true});",
-			       "document.documentElement.dispatchEvent(myevent);",
-			       "}();"
-	].join('\n');*/
 	script.textContent = [
-	    //"document.documentElement.dispatchEvent(new Event('DOMContentLoaded', {bubbles : true, cancelable : true}));",
 	    "document.addEventListener('load', function() {",
 	    "alert('loaded')",
 	    "});",
 	    "var evt = new Event('load', {bubbles : true, cancelable : true});",
-	    //"var evt = new Event('DOMContentLoaded', {bubbles : true, cabcelable : true});",
 	    "document.body.dispatchEvent(evt);"
 	].join('\n');
 	var doc = (document.head || document.documentElement);
 	doc.insertBefore(script, doc.childNodes[0]);
 	script.parentNode.removeChild(script);
 
-	var response = "Decrypted!";//element.outerHTML;
+	var response = "Decrypted!";
     }
 
     sendResponse(response);
